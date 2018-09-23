@@ -24,6 +24,14 @@ class PAS_model extends CI_Model
     return null;
   }
 
+  /**
+   * ref: https://docs.cloudfoundry.org/api/uaa/version/4.19.0/index.html#client-credentials-grant
+   *
+   * @param $login - login
+   * @param $secret - loginsecret
+   * @return bool
+   */
+
   public function getToken($login, $secret)
   {
     $url = '/oauth/token';
@@ -55,6 +63,15 @@ class PAS_model extends CI_Model
       return false;
     }
 
+    /*
+    {
+      "access_token" : "65d8cfa454b443f9848c6628155255b7",
+      "token_type" : "bearer",
+      "expires_in" : 43199,
+      "scope" : "clients.read emails.write scim.userids password.write idps.write notifications.write oauth.login scim.write critical_notifications.write",
+      "jti" : "65d8cfa454b443f9848c6628155255b7"
+    }
+    */
     $this->token = $result->access_token;
 
     curl_close($ch);
@@ -64,6 +81,10 @@ class PAS_model extends CI_Model
 
   /**
    * ref: http://v3-apidocs.cloudfoundry.org/version/3.47.0/#create-a-space
+   *
+   * @param $name - space name
+   * @param $org_guid - org uid
+   * @return bool
    */
   public function createSpace($name, $org_guid)
   {
